@@ -1,0 +1,123 @@
+<?php
+
+class ProductController
+{
+    private $pageNum; //当前页数
+    private $user;
+    private $areaCode;
+    private $mainTypeId;
+    private $webInfo;
+    public function __construct($id){
+        if($id == -1)
+            $this->mainTypeId = 1;
+        else
+            $this->mainTypeId = $id;
+    }
+
+    private function init(){
+       // $this->pageNum = $_GET['page'];
+       // if($this->pageNum == 0)
+           
+        //初始化用户
+        $this->user = UserController::getUserId();
+        $this->pageNum =1;
+        if(array_key_exists('areaCode',$_GET)){
+            $this->areaCode = $_GET['areaCode'];
+            return true;
+        }
+        return false;        
+    }
+    
+    private function echoErr($info){
+        echo $info;
+    }
+    
+    //推荐商品
+    private function selectRecInfo(){
+        $sql = "select DISTINCT recommend.id,recommend.name,recommend.desc,recommend.url,recommend.img,recommend.time,recommend.endTime,recommend.count from recommend left join recommendarea on recommendarea.recId = recommend.id
+            where recommendarea.recAreaId =".$this->areaCode;
+        $result = DB::select($sql);
+        $this->webInfo = $result;
+    }
+    //商品选择算法：根据id和区域,找出相应的商品Id,然后从webinfo中显示相应的商品信息
+    private function selectWebInfo(){
+        if($this->mainTypeId == 1)
+            $sql = "select DISTINCT webinfo.id,webinfo.name,webinfo.desc,webinfo.url,webinfo.img,webinfo.likeNum from webinfo left join webmaparea on webmaparea.webId = webinfo.id
+            where  webmaparea.areaCode =".$this->areaCode;
+        else 
+            $sql = "select DISTINCT webinfo.id,webinfo.name,webinfo.desc,webinfo.url,webinfo.img,webinfo.likeNum from webinfo left join webmaparea on webmaparea.webId = webinfo.id
+            where webinfo.mainType =".$this->mainTypeId." and webmaparea.areaCode =".$this->areaCode;
+        $result = DB::select($sql);
+        $likeId = DB::select("select webId from useraction where userId = '".$this->user."'");
+        $storeId =DB::select("select webId from storeaction where userId = '".$this->user."'");
+        //添加like和store2个属性
+        foreach($result as $info){
+            $info->like = 0;
+            foreach ($likeId as $id){
+                if($id->webId == $info->id){
+                    $info->like = 1;
+                    break;
+                }
+            }
+            $info->store = 0;
+            foreach ($storeId as $id){
+                if($id->webId == $info->id){
+                    $info->store = 1;
+                    break;
+                }
+            }
+        }
+        $this->webInfo = $result;
+    }
+    
+    private function selectLove(){
+        //store
+        $sql = "select DISTINCT webinfo.id,webinfo.name,webinfo.desc,webinfo.url,webinfo.img,webinfo.likeNum from webinfo left join storeaction on storeaction.webId = webinfo.id
+            where storeaction.userId ='".$this->user."'";
+        $storeInfo = DB::select($sql);
+        //store's ad
+        $recInfo = array();
+        for ($i = 0; $i < count($storeInfo);$i++){
+            $info = $storeInfo[$i];
+            $sql = "select * from recommend where fromWebId = ".$info->id;
+            $ret = DB::select($sql);
+            $recInfo[$i] = $ret;
+        }
+        
+        //like
+        $sql = "select DISTINCT webinfo.id,webinfo.name,webinfo.desc,webinfo.url,webinfo.img,webinfo.likeNum from webinfo left join useraction on useraction.webId = webinfo.id
+            where useraction.userId ='".$this->user."'";
+        $likeInfo = DB::select($sql);
+        
+        //used
+        $sql = "select DISTINCT webinfo.id,webinfo.name,webinfo.desc,webinfo.url,webinfo.img,webinfo.likeNum from webinfo left join useraction on useraction.webId = webinfo.id
+            where useraction.userId ='".$this->user."' and useraction.action=2";
+        $useInfo = DB::select($sql);
+        $this->webInfo = ['recInfo'=>$recInfo,'storeInfo'=>$storeInfo,'likeInfo'=>$likeInfo,'useInfo'=>$useInfo];
+    }
+    
+    public function getWebInfo(){
+        return $this->webInfo;   
+    }
+    
+    public function main(){
+        if(false == $this->init()){
+            $this->echoErr("无法找到相应的地区");
+            return;
+        }
+        if(array_key_exists('type',$_GET)){
+            $this->mainType = $_GET['type'];
+        }
+        if($this->mainTypeId == 3)
+            $this->selectRecInfo();
+        else if($this->mainTypeId == 2){
+            $this->selectLove();
+        }else if($this->mainTypeId == 1){
+            $this->selectWebInfo();
+        }else{
+            $this->selectWebInfo();
+        }
+    }
+}
+
+?>
