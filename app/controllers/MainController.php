@@ -23,11 +23,17 @@ class MainController extends Controller
         return 1;
     }    
     
-    public function getWebInfo(){
+    public function getWebInfo($typeCount){
         $this->product = new ProductController($this->id);
-        $this->product->main();
+        $this->product->main($typeCount);
         $webInfo = $this->product->getWebInfo();
         return $webInfo;
+    }
+    
+    public function getLoveView(){
+        $this->product = new ProductController(2);
+        $webInfo = $this->product->getLoveInfo();
+        return View::make('include.main.store',['webInfo'=>$webInfo,'bid'=>2]);
     }
     
     public function getMainView(){ 
@@ -36,6 +42,7 @@ class MainController extends Controller
         //sideBar 获取分类信息以及id
         //main.allType  根据不同的id选择不同的界面，id = -1则默认全部分类页面，
         $allBarName = BarTools::getSideBarName();
+        $typeCount = count($allBarName);
         foreach ($allBarName as $name){
             if($name->id == $this->id){
                 $curBarName = $name;
@@ -44,7 +51,7 @@ class MainController extends Controller
         }
         if($curBarName == null)
             $curBarName = $allBarName[0];
-        $webInfo = $this->getWebInfo();
+        $webInfo = $this->getWebInfo($typeCount);
         if($webInfo == null)
             $webInfo = array();//无结果时设为空数组
         return View::make('pages.main',['cityName'=>$cityName, 'allBarName'=>$allBarName,'curBarName'=>$curBarName,'areaCode'=>$this->areaCode,'webInfo'=>$webInfo]);

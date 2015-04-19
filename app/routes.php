@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\View;
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -19,3 +20,17 @@ Route::get('/main','MainController@getMainView');
 Route::post('action','ActionControllers@doWork');
 
 Route::get('/login','AreaController@getAreaView');
+
+Route::get('/love','MainController@getLoveView');
+
+Route::get('/dbcity','DBController@insertCity');
+
+
+
+Route::get('dbweb','DBController@insertWebs');
+
+//Route::get('db/cma','DBController@mapView');
+
+Route::get('test',function(){
+    return View::make('pages.test');
+});

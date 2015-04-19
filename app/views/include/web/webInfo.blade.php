@@ -14,7 +14,7 @@
 		<div class="clear-float"></div>
 	</div>	
 	<div class="goods-bottom">
-		<div class="goods-msg">物品的说明</div>
+		<div class="goods-msg">{{{$info->extraDesc}}}</div>
 		<div class="user-action">
 			<div class="store">
 			    @if($info->store == 0)

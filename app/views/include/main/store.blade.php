@@ -1,4 +1,4 @@
-<div class="my-details-wrap">
+<div class="t{{{$bid}}}-details-wrap hide my-details-wrap">
 	<div class="my-store-wrap">
 		<div class="store-title type-info"><span>我收藏的</span></div>
 		<div class="ul-wrap">

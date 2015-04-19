@@ -11,7 +11,7 @@ class ActionControllers extends Controller
         $this->webId = Request::input('id');
         $this->userId = Counter::getUser();
     }
-    //like:1 unlike:2 
+    //like:1
     private function doLike(){
         $sql = "update webinfo set likeNum = likeNum+1 where id = ".$this->webId;
         DB::statement($sql);
@@ -22,18 +22,18 @@ class ActionControllers extends Controller
     private function doUnLike(){
         $sql = "update webinfo set likeNum = likeNum - 1 where id = ".$this->webId;
         DB::statement($sql);
-        $sql = "delete from useraction where webId = ".$this->webId." and userId = '".$this->userId."'";
+        $sql = "delete from useraction where webId = ".$this->webId." and userId = '".$this->userId."' and action = 1";
         DB::statement($sql);
     }
     
-    //store:1 unstore:2
+    //store:2
     private function doStore(){
-        $sql = "insert into storeaction (store,webId,userId) values (1,".$this->webId.",'".$this->userId."')";
+        $sql = "insert into useraction (action,webId,userId) values (3,".$this->webId.",'".$this->userId."')";
         DB::statement($sql);
     }
     
     private function doUnStore(){
-        $sql = "delete from storeaction where webId = ".$this->webId." and userId = '".$this->userId."'";
+        $sql = "delete from useraction where webId = ".$this->webId." and userId = '".$this->userId."' and action = 3";
         DB::statement($sql);
     }
     

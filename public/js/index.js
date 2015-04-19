@@ -4,19 +4,33 @@ $(function() {
 		$('.wrap').height($(this).height())
 	})
 	window.scrollTo(0,document.body.scrollHeight)
-
+	
 	// 导航栏切换页面
 	$('.nav li').on('touchend' ,function() {
-		var showClass = '.' + $(this).find('a:eq(0)').attr('id') + '-details-wrap'
-		var $cur = $('.details .show'), $new = $(showClass)
+		var id = $(this).find('a:eq(0)').attr('id');
+		var showClass = '.' + $(this).find('a:eq(0)').attr('id') + '-details-wrap';
+		if(id == 't2'){
+			var areaCode = $('.header').attr('areaCode');
+			$.ajax({ 
+			   	type:"get",
+			   	url: "love?areaCode="+areaCode, 
+			   	success: function(msg){
+			   		//remove old div,and add new content
+		   			var p = $(showClass).prev();
+			   		$(showClass).remove();
+			   		p.after(msg);
+			   		p.next().removeClass('hide').addClass('show');
+			   	}
+			});
+		}
+		var $cur = $('.details .show'), $new = $(showClass);
 		if($cur[0] !== $new[0]) {
 			$(this).parent().find('a.clicked').removeClass('clicked')
-			$(this).find('a:eq(0)').addClass('clicked')
-			$cur.removeClass('show').addClass('hide')
-			$new.removeClass('hide').addClass('show')
+			$(this).find('a:eq(0)').addClass('clicked');
+			$new.removeClass('hide').addClass('show');
+			$cur.removeClass('show').addClass('hide');
 		}
 	})
-
 
 	// 点击搜索 
 	$('.search-wrap img:eq(0)').on('touchend', function() {
@@ -104,5 +118,18 @@ $(function() {
 		   	}
 		})
 	})
-
+	
+	/*
+	$('#waterfall').infinitescroll({
+        navSelector: "#navigation",
+        nextSelector: "#navigation a",
+        itemSelector: ".wfc",
+        debug: true,
+        localMode: true, 		//是否允许载入具有相同函数的页面，默认为false
+        dataType: 'html',		//可以是json
+        maxPage: 10, 
+    }, function(newElems) {
+        var $newElems = $(newElems);
+    });
+    */
 })
