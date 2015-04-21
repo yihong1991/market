@@ -13,6 +13,7 @@ ul {
 	-moz-tap-highlight-color: rgba(0,0,0,0);
 	tap-highlight-color: rgba(0,0,0,0);
 	overflow: auto;
+	-webkit-overflow-scrolling:touch;
 }
 
 .header {

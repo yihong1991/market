@@ -1,23 +1,14 @@
 <?php
 class DBController extends Controller{
-    public function insertCity(){
-        $file = fopen("D:\\citys", "r+");
-        if($file == 0)
-            return;
-        while(!feof($file)){
-            $line = fgets($file);
-            $line = str_replace("\r", "",$line);
-            $line = str_replace("\n", "",$line);
-            $str = explode(" ", $line);
-            $sql = "insert into area (areaName,letterIndex) values('".$str[0]."','".$str[1]."')";
-            DB::statement($sql);
-        }
-    }
     
     public function insertWebs(){
-        $file = fopen("D:\\webs", "r+");
+        $file = fopen("/var/www/upload/main", "r+");
         if($file == 0)
             return;
+        $sql = "delete from webmaparea";
+        DB::statement($sql);
+        $sql = "delete from webinfo";
+        DB::statement($sql);
         while(!feof($file)){
             $line = fgets($file);
             $line = str_replace("\r", "",$line);
@@ -50,26 +41,15 @@ class DBController extends Controller{
             }
         }
     }
-    
-    private function setMapArea(){
-        if(!array_key_exists('webId',$_GET)){
-            return;
-        }
-        $webId = $_GET['webId'];
-        $sql = "delete from webmaparea where webId = ".$webId;
-        DB::select($sql);
-        foreach($_GET as $key=>$value){
-            if($key == "webId")
-                continue;
-            $area = $key;
-            $sql = "insert into webmaparea (webId,areaCode) values(".$webId.",".$area.")";
-            DB::statement($sql);        
-        }
-    }
+
     public function recMapAndInfo(){
-        $file = fopen("D:\\rec", "r+");
+        $file = fopen("/var/www/upload/rec", "r+");
         if($file == 0)
             return;
+        $sql = "delete from recommend";
+        DB::statement($sql);
+        $sql = "delete from recommendarea";
+        DB::statement($sql);
         while(!feof($file)){
             $line = fgets($file);
             $line = str_replace("\r", "",$line);

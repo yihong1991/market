@@ -6,15 +6,15 @@ $(function() {
 	window.scrollTo(0,document.body.scrollHeight)
 	
 	var touching = false;
-	$('.nav li').on('touchstart'.function){
+	$('.nav li').on('touchstart',function(){
 		touching = true;
-	}
+	})
 	
-	$('.nav li').on('touchmove'.function){
+	$('.nav li').on('touchmove',function(){
 		if(touching){
 			touching = false;
 		}
-	}
+	})
 	
 	// 导航栏切换页面
 	$('.nav li').on('touchend' ,function() {

@@ -31,7 +31,20 @@ Route::get('dbweb','DBController@insertWebs');
 
 Route::get('dbrec','DBController@recMapAndInfo');
 
-//Route::get('db/cma','DBController@mapView');
+
+Route::get('upload',function(){
+    return View::make('pages.upload');
+});
+
+Route::post('upload/main',function(){
+    var_dump($_FILES['main_file']);
+    move_uploaded_file($_FILES['main_file']['tmp_name'],'/var/www/upload/main');
+});
+
+Route::post('upload/rec',function(){
+    var_dump($_FILES['rec_file']);
+    move_uploaded_file($_FILES['rec_file']['tmp_name'],'/var/www/upload/rec');
+});
 
 Route::get('test',function(){
     return View::make('pages.test');
