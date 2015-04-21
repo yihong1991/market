@@ -66,6 +66,42 @@ class DBController extends Controller{
             DB::statement($sql);        
         }
     }
+    public function recMapAndInfo(){
+        $file = fopen("D:\\rec", "r+");
+        if($file == 0)
+            return;
+        while(!feof($file)){
+            $line = fgets($file);
+            $line = str_replace("\r", "",$line);
+            $line = str_replace("\n", "",$line);
+            $str = explode("|", $line);
+            $id = $str[0];
+            $name=$str[1];
+            $desc=$str[2];
+            $url=$str[3];
+            $img=$str[4];
+            $startTime = $str[5];
+            $endTime = $str[6];
+            $priority = $str[7];
+            $mainType=$str[8];
+            $fromWebId = $str[9];
+            $typeName=$str[10];
+            $beijing=$str[11];
+            $shanghai=$str[12];
+            $gangzhou=$str[13];
+            $shenzhen=$str[14];
+            $sql = "INSERT INTO `recommend` VALUES ('".$id."', '".$name."', '".$desc."', '".$url."', '".$img."', '".$startTime."', '".$endTime."', '0', '.$priority.', '.$mainType.', '.$fromWebId.', '".$typeName."')";
+            DB::statement($sql);
+            for( $i= 11;  $i<15;$i++){
+                if($str[$i] != 0){
+                    $code = $i - 10;
+                    $sql = "insert into `recommendarea` (recId,recAreaId) values ('".$str[0]."','".$code."')";
+                    DB::statement($sql);
+                }
+            }
+        }
+    }
+    
     public function mapView(){
         $this->setMapArea();
         $sql = "select areaId,areaName from area";

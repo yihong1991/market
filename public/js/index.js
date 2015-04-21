@@ -5,30 +5,44 @@ $(function() {
 	})
 	window.scrollTo(0,document.body.scrollHeight)
 	
+	var touching = false;
+	$('.nav li').on('touchstart'.function){
+		touching = true;
+	}
+	
+	$('.nav li').on('touchmove'.function){
+		if(touching){
+			touching = false;
+		}
+	}
+	
 	// 导航栏切换页面
 	$('.nav li').on('touchend' ,function() {
-		var id = $(this).find('a:eq(0)').attr('id');
-		var showClass = '.' + $(this).find('a:eq(0)').attr('id') + '-details-wrap';
-		if(id == 't2'){
-			var areaCode = $('.header').attr('areaCode');
-			$.ajax({ 
-			   	type:"get",
-			   	url: "love?areaCode="+areaCode, 
-			   	success: function(msg){
-			   		//remove old div,and add new content
-		   			var p = $(showClass).prev();
-			   		$(showClass).remove();
-			   		p.after(msg);
-			   		p.next().removeClass('hide').addClass('show');
-			   	}
-			});
-		}
-		var $cur = $('.details .show'), $new = $(showClass);
-		if($cur[0] !== $new[0]) {
-			$(this).parent().find('a.clicked').removeClass('clicked')
-			$(this).find('a:eq(0)').addClass('clicked');
-			$new.removeClass('hide').addClass('show');
-			$cur.removeClass('show').addClass('hide');
+		if(touching){
+			var id = $(this).find('a:eq(0)').attr('id');
+			var showClass = '.' + $(this).find('a:eq(0)').attr('id') + '-details-wrap';
+			if(id == 't2'){
+				var areaCode = $('.header').attr('areaCode');
+				$.ajax({ 
+				   	type:"get",
+				   	url: "love?areaCode="+areaCode, 
+				   	success: function(msg){
+				   		//remove old div,and add new content
+			   			var p = $(showClass).prev();
+				   		$(showClass).remove();
+				   		p.after(msg);
+				   		p.next().removeClass('hide').addClass('show');
+				   	}
+				});
+			}
+			var $cur = $('.details .show'), $new = $(showClass);
+			if($cur[0] !== $new[0]) {
+				$(this).parent().find('a.clicked').removeClass('clicked')
+				$(this).find('a:eq(0)').addClass('clicked');
+				$new.removeClass('hide').addClass('show');
+				$cur.removeClass('show').addClass('hide');
+			}
+			touching = false;
 		}
 	})
 

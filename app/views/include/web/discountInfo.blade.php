@@ -2,7 +2,9 @@
 	<div class="goods-top add-click"  wid="{{{$info->id}}}">
 		<a class="goods-link" href="{{{$info->url}}}"></a>
 		<div class="goods-pic-wrap">
-			<img class="rec-icon" src="images/tuijian.png" alt="推荐">
+		    @if($info->mainType == 1)
+			     <img class="rec-icon" src="images/tuijian.png" alt="推荐">
+			@endif
 			<img class="goods-pic" src="images/web/{{{$info->img}}}" alt="商品">
 		</div>
 		<div class="goods-info">

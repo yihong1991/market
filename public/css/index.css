@@ -102,6 +102,7 @@ body {
 	width: 90%;
 	overflow-y: auto;
 	overflow-x: hidden;
+	-webkit-overflow-scrolling:touch;
 }
 
 .nav li {
@@ -243,7 +244,7 @@ a.clicked .left-radius, a.clicked .right-radius {
 
 .active-goods .goods-pic {
 	margin-left: 5px;
-	margin-top: 10px;
+	margin-top: 5px;
 }
 
 .rec-icon {
@@ -254,7 +255,14 @@ a.clicked .left-radius, a.clicked .right-radius {
 }
 
 .goods-pic {
-	width: 60px;
+	width: 57px;
+	height:57px;
+	border:solid 1px #B0B0B0;
+	border-radius:10px;
+	-webkit-border-radius: 10px;
+	-moz-border-radius:10px;
+	-ms-border-radius:10px;
+	-o-border-radius:10px;	
 }
 
 .goods-info {
@@ -270,12 +278,13 @@ a.clicked .left-radius, a.clicked .right-radius {
 	background: #edf8ff;
 }
 
-.goods-info .goods-name {
+.goods-info {
 	font-size: 16px;
 }
 
-.goods-info .goods-msg {
-	font-size: 16px;
+.goods-msg {
+	font-size: 14px;
+	color:#6d6d6d;
 }
 
 .goods-info p {

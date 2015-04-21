@@ -29,6 +29,8 @@ Route::get('/dbcity','DBController@insertCity');
 
 Route::get('dbweb','DBController@insertWebs');
 
+Route::get('dbrec','DBController@recMapAndInfo');
+
 //Route::get('db/cma','DBController@mapView');
 
 Route::get('test',function(){

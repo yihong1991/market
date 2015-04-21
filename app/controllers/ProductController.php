@@ -34,10 +34,35 @@ class ProductController
     
     //推荐商品
     private function selectRecInfo(){
-        $sql = "select DISTINCT recommend.id,recommend.name,recommend.desc,recommend.url,recommend.img,recommend.time,recommend.endTime,recommend.count from recommend left join recommendarea on recommendarea.recId = recommend.id
-            where recommendarea.recAreaId =".$this->areaCode;
-        $result = DB::select($sql);
-        $this->webInfo[3] = $result;
+        //type = 1表示搜狗推荐
+        $sql = "select DISTINCT recommend.id,recommend.name,recommend.desc,recommend.url,recommend.img,recommend.time,recommend.endTime,recommend.count,recommend.mainType,recommend.typeName from recommend left join recommendarea on recommendarea.recId = recommend.id
+            where recommendarea.recAreaId =".$this->areaCode." order by recommend.mainType ASC";
+            $result = DB::select($sql);
+        $arr = array();
+        if(count($result) == 0){
+            $this->webInfo[3] = $arr;
+            return;
+        }
+        $child = array();
+        $oldType = $result[0]->mainType;
+        $index = 0;
+        $j = 0;
+        for($i = 0 ; $i < count($result);$i++){
+            $ele = $result[$i];
+            if($oldType == $ele->mainType)
+                $child[$j] = $ele;
+            else{
+                $oldType = $ele->mainType;
+                $arr[$index]= $child;
+                $index++;
+                $child = array();
+                $j=0;
+                $child[$j] = $ele;
+            }
+            $j++;
+        }
+        $arr[$index]= $child;
+        $this->webInfo[3] = $arr;        
     }
     //商品选择算法：根据id和区域,找出相应的商品Id,然后从webinfo中显示相应的商品信息
     private function selectWebInfo($mId){
@@ -120,13 +145,13 @@ class ProductController
         if(array_key_exists('type',$_GET)){
             $this->mainType = $_GET['type'];
         }
+
         for($i=1;$i<=$count;$i++){
-            //$this->mainTypeId = 1;
-            $this->selectRecInfo();
-            $this->selectLove();
-            if($i!=2 || $i!=3)
+            if($i!=2 && $i!=3)
                 $this->selectWebInfo($i);
         }
+        $this->selectRecInfo();
+        $this->selectLove();
         /*
         if($this->mainTypeId == 3)
             $this->selectRecInfo();
