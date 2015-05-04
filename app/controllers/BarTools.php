@@ -2,7 +2,7 @@
 class BarTools
 {
     public static function getSideBarName(){
-        $sql = "select * from mainclassinfo ORDER BY priority asc";
+        $sql = "select * from mainclassinfo where mainType ORDER BY priority asc";
         $result = DB::select($sql);
         return $result;
     }

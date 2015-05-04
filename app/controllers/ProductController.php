@@ -67,11 +67,11 @@ class ProductController
     //商品选择算法：根据id和区域,找出相应的商品Id,然后从webinfo中显示相应的商品信息
     private function selectWebInfo($mId){
         if($mId == 1)
-            $sql = "select DISTINCT webinfo.id,webinfo.name,webinfo.desc,webinfo.extraDesc,webinfo.url,webinfo.img,webinfo.likeNum from webinfo left join webmaparea on webmaparea.webId = webinfo.id
-            where  webmaparea.areaCode =".$this->areaCode;
+            $sql = "select DISTINCT webinfo.id,webinfo.name,webinfo.desc,webinfo.extraDesc,webinfo.url,webinfo.img,webinfo.likeNum,webinfo.isRec from webinfo left join webmaparea on webmaparea.webId = webinfo.id
+            where  webmaparea.areaCode =".$this->areaCode." order by webinfo.priority desc, webinfo.isRec desc,webinfo.likeNum desc";
         else 
-            $sql = "select DISTINCT webinfo.id,webinfo.name,webinfo.desc,webinfo.extraDesc,webinfo.url,webinfo.img,webinfo.likeNum from webinfo left join webmaparea on webmaparea.webId = webinfo.id
-            where webinfo.mainType =".$mId." and webmaparea.areaCode =".$this->areaCode;
+            $sql = "select DISTINCT webinfo.id,webinfo.name,webinfo.desc,webinfo.extraDesc,webinfo.url,webinfo.img,webinfo.likeNum,webinfo.isRec from webinfo left join webmaparea on webmaparea.webId = webinfo.id
+            where webinfo.mainType =".$mId." and webmaparea.areaCode =".$this->areaCode." order by webinfo.priority desc, webinfo.isRec desc,webinfo.likeNum desc";
         $result = DB::select($sql);
         $likeId = DB::select("select webId from useraction where userId = '".$this->user."' and useraction.action=1");
         $storeId =DB::select("select webId from useraction where userId = '".$this->user."' and useraction.action=3");
@@ -97,7 +97,7 @@ class ProductController
     
     public function selectLove(){
         //store
-        $sql = "select DISTINCT webinfo.id,webinfo.name,webinfo.desc,webinfo.extraDesc,webinfo.url,webinfo.img,webinfo.likeNum from webinfo left join useraction on useraction.webId = webinfo.id
+        $sql = "select DISTINCT webinfo.id,webinfo.name,webinfo.desc,webinfo.extraDesc,webinfo.url,webinfo.img,webinfo.likeNum,webinfo.isRec from webinfo left join useraction on useraction.webId = webinfo.id
             where useraction.userId ='".$this->user."' and useraction.action=3";
         $storeInfo = DB::select($sql);
         //store's ad
@@ -110,12 +110,12 @@ class ProductController
         }
         
         //like
-        $sql = "select DISTINCT webinfo.id,webinfo.name,webinfo.desc,webinfo.extraDesc,webinfo.url,webinfo.img,webinfo.likeNum from webinfo left join useraction on useraction.webId = webinfo.id
+        $sql = "select DISTINCT webinfo.id,webinfo.name,webinfo.desc,webinfo.extraDesc,webinfo.url,webinfo.img,webinfo.likeNum,webinfo.isRec from webinfo left join useraction on useraction.webId = webinfo.id
             where useraction.userId ='".$this->user."' and useraction.action=1";
         $likeInfo = DB::select($sql);
         
         //used
-        $sql = "select DISTINCT webinfo.id,webinfo.name,webinfo.desc,webinfo.extraDesc,webinfo.url,webinfo.img,webinfo.likeNum from webinfo left join useraction on useraction.webId = webinfo.id
+        $sql = "select DISTINCT webinfo.id,webinfo.name,webinfo.desc,webinfo.extraDesc,webinfo.url,webinfo.img,webinfo.likeNum,webinfo.isRec from webinfo left join useraction on useraction.webId = webinfo.id
             where useraction.userId ='".$this->user."' and useraction.action=2";
         $useInfo = DB::select($sql);
         $this->webInfo[2] = ['recInfo'=>$recInfo,'storeInfo'=>$storeInfo,'likeInfo'=>$likeInfo,'useInfo'=>$useInfo];
@@ -134,7 +134,7 @@ class ProductController
         if(array_key_exists('type',$_GET)){
             $this->mainType = $_GET['type'];
         }
-        return $this->selectLove();        
+        return $this->selectLove();
     }
     
     public function main($count){

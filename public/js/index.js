@@ -51,6 +51,7 @@ $(function() {
 		// 跳转到搜索页面
 	})
 
+
 	// 点赞, 对于已经点赞的~~
 	// 收藏 & 取消收藏
 	$('.like-icon').on('touchend', function() {
@@ -111,26 +112,53 @@ $(function() {
 		$(this).find('.part-count').html(parseInt($(this).find('.part-count').html(), 10) + 1)
 	})*/
 	
+
+	var clicktouching = false;
+	$('.add-click').on('touchstart',function(){
+		clicktouching = true;
+	})
+	
+	$('.add-click').on('touchmove',function(){
+		if(clicktouching){
+			clicktouching = false;
+		}
+	})
+	
 	$('.add-click').on('touchend', function() {
-		var $id = $(this).attr('wid');
-		$.ajax({ 
-		   	type:"post",
-		   	url: "action?act=click", 
-		   	data:{id:$id, act: 'click'}, 
-		   	success: function(msg){
-		   	}
-		})
+		if(clicktouching){
+			var $id = $(this).attr('wid');
+			$.ajax({ 
+			   	type:"post",
+			   	url: "action?act=click", 
+			   	data:{id:$id, act: 'click'}, 
+			   	success: function(msg){
+			   	}
+			})
+		}
+	})
+	
+	var addtouching = false;
+	$('.add-used').on('touchstart',function(){
+		addtouching = true;
+	})
+	
+	$('.add-used').on('touchmove',function(){
+		if(addtouching){
+			addtouching = false;
+		}
 	})
 	
 	$('.add-used').on('touchend', function() {
-		var $id = $(this).attr('wid');
-		$.ajax({ 
-		   	type:"post",
-		   	url: "action?act=use", 
-		   	data:{id:$id, act: 'use'}, 
-		   	success: function(msg){
-		   	}
-		})
+		if(addtouching){
+			var $id = $(this).attr('wid');
+			$.ajax({ 
+			   	type:"post",
+			   	url: "action?act=use", 
+			   	data:{id:$id, act: 'use'}, 
+			   	success: function(msg){
+			   	}
+			})
+		}
 	})
 	
 	/*

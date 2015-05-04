@@ -14,18 +14,18 @@ $(function() {
 	var h = document.documentElement.scrollHeight || document.body.scrollHeight;
 	window.scrollTo(0, h);
 
+	$('.header').height($(window).height() * 0.3)
 	// 调整索引项下边距
 	function adjustIndexListHeight(flag) {
-		var $main = $('.main')
+		var baseHeight = $(window).height() * 0.7
 		var $indexList = $('.city-index-wrap ul')
 		var $indexItem = $('.city-index-wrap ul li')
 		if(flag < 0) {
-			console.log(flag)
-			while($main.height() < $indexList.height()) {
+			while(baseHeight < $indexList.height()) {
 				$indexItem.css('margin-bottom', parseInt($indexItem.css('margin-bottom'), 10) - 1)
 			}
 		} else {
-			while($main.height() > $indexList.height() + 5) {
+			while(baseHeight > $indexList.height() + 5) {
 				if(parseInt($indexItem.css('margin-bottom'), 10) < 0) {
 					$indexItem.css('margin-bottom', parseInt($indexItem.css('margin-bottom'), 10) + 1)
 				} else {

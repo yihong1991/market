@@ -3,6 +3,7 @@ class DBController extends Controller{
     
     public function insertWebs(){
         $file = fopen("/var/www/upload/main", "r+");
+        //$file = fopen("D://main", "r+");
         if($file == 0)
             return;
         $sql = "delete from webmaparea";
@@ -20,23 +21,25 @@ class DBController extends Controller{
             $extraDesc=$str[3];
             $url=$str[4];
             $img=$str[5];
-            $type=$str[6];
-            $beijing=$str[7];
-            $shanghai=$str[8];
-            $gangzhou=$str[9];
-            $shenzhen=$str[10];
+            $likeNum = $str[6];
+            $type=$str[7];
+            $priority = $str[8];
+            $isRec = $str[9];
+            $rec = $str[10];
+            $score = $str[11];
+            
             try{
-                $sql="insert into webinfo (webinfo.id,webinfo.name,webinfo.desc,webinfo.extraDesc,webinfo.url,webinfo.img,webinfo.mainType) 
-                    values(".$id.",'".$name."','".$desc."','".$extraDesc."','".$url."','".$img."',".$type.")";
+                $sql="insert into webinfo (webinfo.id,webinfo.name,webinfo.desc,webinfo.extraDesc,webinfo.url,webinfo.img,webinfo.likeNum,webinfo.mainType,webinfo.priority,webinfo.isRec,webinfo.rec,webinfo.score) 
+                    values(".$id.",'".$name."','".$desc."','".$extraDesc."','".$url."','".$img."','".$likeNum."',".$type.",'".$priority."','".$isRec."','".$rec."','".$score."')";
                 DB::statement($sql);
             }catch (Exception $e){
                 
             }
-            for( $i= 7;  $i<11;$i++){
+            for( $i= 12;  $i<38;$i++){
                 if($str[$i] != 0){
-                $code = $i - 6;
-                $sql = "insert into webmaparea (webId,areaCode) values('".$str[0]."','".$code."')";
-                DB::statement($sql);
+                    $code = $i - 11;
+                    $sql = "insert into webmaparea (webId,areaCode) values('".$str[0]."','".$code."')";
+                    DB::statement($sql);
                 }
             }
         }
@@ -44,6 +47,7 @@ class DBController extends Controller{
 
     public function recMapAndInfo(){
         $file = fopen("/var/www/upload/rec", "r+");
+        //$file = fopen("D://rec", "r+");
         if($file == 0)
             return;
         $sql = "delete from recommend";
@@ -62,19 +66,18 @@ class DBController extends Controller{
             $img=$str[4];
             $startTime = $str[5];
             $endTime = $str[6];
-            $priority = $str[7];
-            $mainType=$str[8];
-            $fromWebId = $str[9];
-            $typeName=$str[10];
-            $beijing=$str[11];
-            $shanghai=$str[12];
-            $gangzhou=$str[13];
-            $shenzhen=$str[14];
-            $sql = "INSERT INTO `recommend` VALUES ('".$id."', '".$name."', '".$desc."', '".$url."', '".$img."', '".$startTime."', '".$endTime."', '0', '.$priority.', '.$mainType.', '.$fromWebId.', '".$typeName."')";
+            $num = $str[7];
+            $priority = $str[8];
+            $mainType=$str[9];
+            $fromWebId = $str[10];
+            $typeName=$str[11];
+            $rec = $str[12];
+            
+            $sql = "INSERT INTO `recommend` VALUES ('".$id."', '".$name."', '".$desc."', '".$url."', '".$img."', '".$startTime."', '".$endTime."', '".$num."', '.$priority.', '.$mainType.', '.$fromWebId.', '".$typeName."','".$rec."')";
             DB::statement($sql);
-            for( $i= 11;  $i<15;$i++){
+            for( $i= 13;  $i<39;$i++){
                 if($str[$i] != 0){
-                    $code = $i - 10;
+                    $code = $i - 12;
                     $sql = "insert into `recommendarea` (recId,recAreaId) values ('".$str[0]."','".$code."')";
                     DB::statement($sql);
                 }

@@ -39,11 +39,18 @@ Route::get('upload',function(){
 Route::post('upload/main',function(){
     var_dump($_FILES['main_file']);
     move_uploaded_file($_FILES['main_file']['tmp_name'],'/var/www/upload/main');
+    //move_uploaded_file($_FILES['main_file']['tmp_name'],'D://main');
 });
 
 Route::post('upload/rec',function(){
     var_dump($_FILES['rec_file']);
     move_uploaded_file($_FILES['rec_file']['tmp_name'],'/var/www/upload/rec');
+    //move_uploaded_file($_FILES['rec_file']['tmp_name'],'D://rec');
+});
+
+Route::post('upload/img',function(){
+    var_dump($_FILES['rec_file']);
+    move_uploaded_file($_FILES['rec_file']['tmp_name'],'/var/www/public/images/'.$_FILES['rec_file']['name']);
 });
 
 Route::get('test',function(){

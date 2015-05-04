@@ -42,9 +42,16 @@ class AreaController extends Controller
     }
     
     public function getAreaView(){
-       $hotCitys = $this->getHotCitys();
-       $allCitys = $this->getAll();
-       return View::make('layouts.areaChose',['hotCitys'=>$hotCitys,'allCitys'=>$allCitys]);
+        include("Mobile_Detect.php");
+        $detect = new Mobile_Detect();
+        if ($detect->isMobile()||$detect->isTablet()) {
+            // any mobile platform
+            $hotCitys = $this->getHotCitys();
+            $allCitys = $this->getAll();
+            return View::make('layouts.areaChose',['hotCitys'=>$hotCitys,'allCitys'=>$allCitys]);
+        }
+        return View::make('pages.pcView');
+
     }
 }
 
