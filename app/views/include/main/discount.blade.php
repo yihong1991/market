@@ -1,5 +1,6 @@
 <div class="t{{{$bid}}}-details-wrap hide rec-details-wrap">
 			@foreach($webInfo as $info)
+			   @if(count($info == 0))
 			   @else
 			     @if($info[0]->mainType == 1)
 			         <div class="type-info"><span>超狗推荐</span></div>
